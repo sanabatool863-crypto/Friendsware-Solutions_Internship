@@ -1,10 +1,15 @@
-import React from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { CATEGORIES } from "../constants/categories";
+import { Expense } from "../types/Expense";
 import { formatCurrency } from "../utils/formatCurrency";
 
-const ExpenseItem = ({ expense, onDelete }) => {
+interface ExpenseItemProps {
+  expense: Expense;
+  onDelete: (id: string) => void;
+}
+
+export default function ExpenseItem({ expense, onDelete }: ExpenseItemProps) {
   const categoryInfo = CATEGORIES.find(
     (item) => item.name === expense.category,
   );
@@ -12,21 +17,8 @@ const ExpenseItem = ({ expense, onDelete }) => {
   const badgeColor = categoryInfo ? categoryInfo.color : "#9E9E9E";
 
   const handleDelete = () => {
-    Alert.alert(
-      "Delete Expense",
-      "Are you sure you want to delete this expense?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => onDelete(expense.id),
-        },
-      ],
-    );
+    console.log("Deleting:", expense.id);
+    onDelete(expense.id);
   };
 
   return (
@@ -38,8 +30,15 @@ const ExpenseItem = ({ expense, onDelete }) => {
       </View>
 
       <View style={styles.bottomRow}>
-        <View style={[styles.categoryBadge, { backgroundColor: badgeColor }]}>
-          <Text style={styles.categoryText}>{expense.category}</Text>
+        <View
+          style={[
+            styles.badge,
+            {
+              backgroundColor: badgeColor,
+            },
+          ]}
+        >
+          <Text style={styles.badgeText}>{expense.category}</Text>
         </View>
 
         <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
@@ -52,17 +51,14 @@ const ExpenseItem = ({ expense, onDelete }) => {
       </Text>
     </View>
   );
-};
-
-export default React.memo(ExpenseItem);
+}
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     padding: 15,
     borderRadius: 12,
     marginBottom: 12,
-    elevation: 3,
   },
 
   topRow: {
@@ -72,7 +68,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "bold",
     flex: 1,
   },
@@ -90,14 +86,14 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
 
-  categoryBadge: {
+  badge: {
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
   },
 
-  categoryText: {
-    color: "#fff",
+  badgeText: {
+    color: "#FFF",
     fontWeight: "600",
     fontSize: 12,
   },
@@ -110,13 +106,13 @@ const styles = StyleSheet.create({
   },
 
   deleteText: {
-    color: "#fff",
+    color: "#FFF",
     fontWeight: "bold",
   },
 
   date: {
     marginTop: 10,
-    fontSize: 12,
     color: "#666",
+    fontSize: 12,
   },
 });

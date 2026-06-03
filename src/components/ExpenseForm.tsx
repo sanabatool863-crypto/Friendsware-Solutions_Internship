@@ -1,47 +1,67 @@
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { CATEGORIES } from "../constants/categories";
 
-const ExpenseForm = ({ onAddExpense }) => {
+import { CATEGORIES } from "../constants/categories";
+import { Expense } from "../types/Expense";
+
+interface ExpenseFormProps {
+  onAddExpense: (expense: Expense) => void;
+}
+
+export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({
+    title: "",
+    amount: "",
+    category: "",
+  });
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors = {
+      title: "",
+      amount: "",
+      category: "",
+    };
+
+    let isValid = true;
 
     if (!title.trim()) {
       newErrors.title = "Title is required";
+      isValid = false;
     }
 
     if (!amount) {
       newErrors.amount = "Amount is required";
+      isValid = false;
     } else if (Number(amount) <= 0) {
       newErrors.amount = "Amount must be greater than 0";
+      isValid = false;
     }
 
     if (!category) {
       newErrors.category = "Please select a category";
+      isValid = false;
     }
 
     setErrors(newErrors);
 
-    return Object.keys(newErrors).length === 0;
+    return isValid;
   };
 
   const handleSubmit = () => {
     if (!validateForm()) return;
 
-    const newExpense = {
+    const newExpense: Expense = {
       id: Date.now().toString(),
       title: title.trim(),
       amount: Number(amount),
@@ -54,14 +74,18 @@ const ExpenseForm = ({ onAddExpense }) => {
     setTitle("");
     setAmount("");
     setCategory("");
-    setErrors({});
+
+    setErrors({
+      title: "",
+      amount: "",
+      category: "",
+    });
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Add New Expense</Text>
 
-      {/* Title Input */}
       <TextInput
         style={styles.input}
         placeholder="Expense Title"
@@ -69,9 +93,8 @@ const ExpenseForm = ({ onAddExpense }) => {
         onChangeText={setTitle}
       />
 
-      {errors.title && <Text style={styles.errorText}>{errors.title}</Text>}
+      {errors.title ? <Text style={styles.error}>{errors.title}</Text> : null}
 
-      {/* Amount Input */}
       <TextInput
         style={styles.input}
         placeholder="Amount"
@@ -80,9 +103,8 @@ const ExpenseForm = ({ onAddExpense }) => {
         onChangeText={setAmount}
       />
 
-      {errors.amount && <Text style={styles.errorText}>{errors.amount}</Text>}
+      {errors.amount ? <Text style={styles.error}>{errors.amount}</Text> : null}
 
-      {/* Category Picker */}
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={category}
@@ -96,27 +118,23 @@ const ExpenseForm = ({ onAddExpense }) => {
         </Picker>
       </View>
 
-      {errors.category && (
-        <Text style={styles.errorText}>{errors.category}</Text>
-      )}
+      {errors.category ? (
+        <Text style={styles.error}>{errors.category}</Text>
+      ) : null}
 
-      {/* Add Button */}
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Add Expense</Text>
       </TouchableOpacity>
     </View>
   );
-};
-
-export default ExpenseForm;
+}
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 12,
-    marginBottom: 15,
-    elevation: 3,
+    marginBottom: 20,
   },
 
   heading: {
@@ -127,38 +145,36 @@ const styles = StyleSheet.create({
 
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#DDD",
     borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    padding: 12,
     marginBottom: 8,
   },
 
   pickerContainer: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: "#DDD",
     borderRadius: 10,
-    marginBottom: 8,
     overflow: "hidden",
-  },
-
-  errorText: {
-    color: "red",
-    marginBottom: 8,
-    fontSize: 13,
   },
 
   button: {
     backgroundColor: "#2196F3",
-    paddingVertical: 14,
+    padding: 14,
     borderRadius: 10,
+    marginTop: 15,
     alignItems: "center",
-    marginTop: 10,
   },
 
   buttonText: {
-    color: "#fff",
+    color: "#FFF",
     fontWeight: "bold",
     fontSize: 16,
+  },
+
+  error: {
+    color: "red",
+    marginBottom: 8,
+    fontSize: 13,
   },
 });

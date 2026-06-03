@@ -1,14 +1,23 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
+import { Expense } from "../types/Expense";
 import ExpenseItem from "./ExpenseItem";
 
-const ExpenseList = ({ expenses, onDeleteExpense }) => {
+interface ExpenseListProps {
+  expenses: Expense[];
+  onDeleteExpense: (id: string) => void;
+}
+
+export default function ExpenseList({
+  expenses,
+  onDeleteExpense,
+}: ExpenseListProps) {
   if (expenses.length === 0) {
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyTitle}>No expenses added yet</Text>
 
-        <Text style={styles.emptySubtitle}>
+        <Text style={styles.emptyText}>
           Start tracking your spending by adding your first expense.
         </Text>
       </View>
@@ -19,41 +28,37 @@ const ExpenseList = ({ expenses, onDeleteExpense }) => {
     <FlatList
       data={expenses}
       keyExtractor={(item) => item.id}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.listContainer}
       renderItem={({ item }) => (
         <ExpenseItem expense={item} onDelete={onDeleteExpense} />
       )}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.listContainer}
     />
   );
-};
-
-export default ExpenseList;
+}
 
 const styles = StyleSheet.create({
   listContainer: {
-    paddingBottom: 20,
+    paddingBottom: 30,
   },
 
   emptyContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     padding: 30,
     borderRadius: 12,
     alignItems: "center",
     marginTop: 20,
-    elevation: 2,
   },
 
   emptyTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#333",
   },
 
-  emptySubtitle: {
+  emptyText: {
     textAlign: "center",
-    color: "#777",
+    color: "#666",
     lineHeight: 22,
   },
 });
