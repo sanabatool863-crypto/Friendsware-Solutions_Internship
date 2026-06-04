@@ -1,9 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Picker } from "@react-native-picker/picker";
 
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
@@ -18,12 +23,10 @@ export default function HomeScreen() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
-  // Load expenses when app starts
   useEffect(() => {
     loadExpenses();
   }, []);
 
-  // Save expenses whenever they change
   useEffect(() => {
     saveExpenses();
   }, [expenses]);
@@ -36,7 +39,7 @@ export default function HomeScreen() {
         setExpenses(JSON.parse(savedExpenses));
       }
     } catch (error) {
-      console.error("Error loading expenses:", error);
+      console.error(error);
     }
   };
 
@@ -44,7 +47,7 @@ export default function HomeScreen() {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
     } catch (error) {
-      console.error("Error saving expenses:", error);
+      console.error(error);
     }
   };
 
@@ -76,26 +79,47 @@ export default function HomeScreen() {
 
       <ExpenseForm onAddExpense={handleAddExpense} />
 
-      <View style={styles.filterContainer}>
-        <Text style={styles.filterTitle}>Filter By Category</Text>
+      <Text style={styles.filterTitle}>Filter By Category</Text>
 
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedCategory}
-            onValueChange={(value) => setSelectedCategory(value)}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.tabsContainer}
+      >
+        <TouchableOpacity
+          style={[styles.tab, selectedCategory === "All" && styles.activeTab]}
+          onPress={() => setSelectedCategory("All")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              selectedCategory === "All" && styles.activeTabText,
+            ]}
           >
-            <Picker.Item label="All Categories" value="All" />
+            All
+          </Text>
+        </TouchableOpacity>
 
-            {CATEGORIES.map((category) => (
-              <Picker.Item
-                key={category.id}
-                label={category.name}
-                value={category.name}
-              />
-            ))}
-          </Picker>
-        </View>
-      </View>
+        {CATEGORIES.map((category) => (
+          <TouchableOpacity
+            key={category.id}
+            style={[
+              styles.tab,
+              selectedCategory === category.name && styles.activeTab,
+            ]}
+            onPress={() => setSelectedCategory(category.name)}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                selectedCategory === category.name && styles.activeTabText,
+              ]}
+            >
+              {category.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
 
       <ExpenseList
         expenses={filteredExpenses}
@@ -128,6 +152,31 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 8,
+  },
+
+  tabsContainer: {
+    paddingBottom: 95,
+  },
+
+  tab: {
+    backgroundColor: "#EDE9FE", // Light purple
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+
+  activeTab: {
+    backgroundColor: "#7C3AED", // Primary purple
+  },
+
+  tabText: {
+    color: "#1E1B4B", // Dark purple
+    fontWeight: "600",
+  },
+
+  activeTabText: {
+    color: "#FFFFFF",
   },
 
   pickerContainer: {
