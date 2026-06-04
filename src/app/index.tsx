@@ -25,7 +25,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Personal Expense Tracker</Text>
+      <Text style={styles.header}>Expense Tracker</Text>
 
       <TotalCard totalAmount={totalAmount} totalExpenses={expenses.length} />
 
@@ -40,13 +40,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#F5F7FA",
+    backgroundColor: "#F5F3FF", // Light purple background
   },
 
   header: {
-    fontSize: 28,
-    fontWeight: "bold",
+    fontSize: 30,
+    fontWeight: "800",
     textAlign: "center",
     marginVertical: 20,
+    color: "#7C3AED", // Main purple
   },
 });

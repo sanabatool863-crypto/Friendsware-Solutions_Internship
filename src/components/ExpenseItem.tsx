@@ -59,6 +59,12 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 12,
     marginBottom: 12,
+
+    // Optional shadow
+    shadowColor: "#7C3AED",
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
 
   topRow: {
@@ -71,11 +77,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     flex: 1,
+    color: "#1E1B4B", // Dark purple text
   },
 
   amount: {
     fontSize: 16,
-    color: "#2196F3",
+    color: "#7C3AED", // Primary purple
     fontWeight: "600",
   },
 
@@ -90,29 +97,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
+    backgroundColor: "#A78BFA", // Secondary purple
   },
 
   badgeText: {
-    color: "#FFF",
+    color: "#FFFFFF",
     fontWeight: "600",
     fontSize: 12,
   },
 
   deleteButton: {
-    backgroundColor: "#F44336",
+    backgroundColor: "#EF4444", // Expense red
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
   },
 
   deleteText: {
-    color: "#FFF",
+    color: "#FFFFFF",
     fontWeight: "bold",
   },
 
   date: {
     marginTop: 10,
-    color: "#666",
+    color: "#6B7280", // Soft gray
     fontSize: 12,
   },
 });

@@ -131,7 +131,7 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#FFFFFF", // Card color
     padding: 16,
     borderRadius: 12,
     marginBottom: 20,
@@ -141,25 +141,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 15,
+    color: "#1E1B4B", // Dark purple text
   },
 
   input: {
     borderWidth: 1,
-    borderColor: "#DDD",
+    borderColor: "#A78BFA", // Light purple border
     borderRadius: 10,
     padding: 12,
     marginBottom: 8,
+    backgroundColor: "#F5F3FF", // Soft purple background
   },
 
   pickerContainer: {
     borderWidth: 1,
-    borderColor: "#DDD",
+    borderColor: "#A78BFA",
     borderRadius: 10,
     overflow: "hidden",
+    backgroundColor: "#F5F3FF",
   },
 
   button: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#7C3AED", // Primary purple
     padding: 14,
     borderRadius: 10,
     marginTop: 15,
@@ -167,13 +170,13 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "#FFF",
+    color: "#FFFFFF",
     fontWeight: "bold",
     fontSize: 16,
   },
 
   error: {
-    color: "red",
+    color: "#EF4444", // Expense/error red
     marginBottom: 8,
     fontSize: 13,
   },

@@ -31,14 +31,20 @@ export default function TotalCard({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#2196F3",
-    borderRadius: 12,
+    backgroundColor: "#7C3AED", // Primary Purple
+    borderRadius: 16,
     padding: 20,
     marginBottom: 20,
+
+    // Optional shadow
+    shadowColor: "#7C3AED",
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5,
   },
 
   heading: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
@@ -50,17 +56,17 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    color: "#E3F2FD",
+    color: "#DDD6FE", // Light purple text
   },
 
   value: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 24,
     fontWeight: "bold",
   },
 
   amount: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "bold",
   },

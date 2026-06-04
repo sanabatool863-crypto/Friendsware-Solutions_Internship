@@ -48,17 +48,24 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     marginTop: 20,
+
+    // Optional shadow
+    shadowColor: "#7C3AED",
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
 
   emptyTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+    color: "#1E1B4B", // Dark purple
   },
 
   emptyText: {
     textAlign: "center",
-    color: "#666",
+    color: "#6B7280", // Soft gray
     lineHeight: 22,
   },
 });

@@ -14,6 +14,4 @@ export const CATEGORIES: Category[] = [
   { id: "7", name: "Education", color: "#3F51B5" },
   { id: "8", name: "Bills", color: "#795548" },
   { id: "9", name: "Travel", color: "#607D8B" },
-  { id: "10", name: "Salary", color: "#8BC34A" },
-  { id: "11", name: "Other", color: "#9E9E9E" },
 ];
