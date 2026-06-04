@@ -1,15 +1,17 @@
+import { Picker } from "@react-native-picker/picker";
 import { useMemo, useState } from "react";
-
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
 import TotalCard from "../components/TotalCard";
 
+import { CATEGORIES } from "../constants/categories";
 import { Expense } from "../types/Expense";
 
 export default function HomeScreen() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
   const handleAddExpense = (expense: Expense) => {
     setExpenses((prev) => [expense, ...prev]);
@@ -23,6 +25,14 @@ export default function HomeScreen() {
     return expenses.reduce((sum, expense) => sum + expense.amount, 0);
   }, [expenses]);
 
+  const filteredExpenses = useMemo(() => {
+    if (selectedCategory === "All") {
+      return expenses;
+    }
+
+    return expenses.filter((expense) => expense.category === selectedCategory);
+  }, [expenses, selectedCategory]);
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Expense Tracker</Text>
@@ -31,7 +41,31 @@ export default function HomeScreen() {
 
       <ExpenseForm onAddExpense={handleAddExpense} />
 
-      <ExpenseList expenses={expenses} onDeleteExpense={handleDeleteExpense} />
+      <View style={styles.filterContainer}>
+        <Text style={styles.filterTitle}>Filter By Category</Text>
+
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={selectedCategory}
+            onValueChange={(value) => setSelectedCategory(value)}
+          >
+            <Picker.Item label="All Categories" value="All" />
+
+            {CATEGORIES.map((category) => (
+              <Picker.Item
+                key={category.id}
+                label={category.name}
+                value={category.name}
+              />
+            ))}
+          </Picker>
+        </View>
+      </View>
+
+      <ExpenseList
+        expenses={filteredExpenses}
+        onDeleteExpense={handleDeleteExpense}
+      />
     </SafeAreaView>
   );
 }
@@ -49,5 +83,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 20,
     color: "#7C3AED", // Main purple
+  },
+
+  filterContainer: {
+    marginBottom: 15,
+  },
+
+  filterTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+
+  pickerContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    overflow: "hidden",
   },
 });
