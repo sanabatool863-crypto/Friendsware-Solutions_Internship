@@ -1,6 +1,9 @@
-import { Picker } from "@react-native-picker/picker";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Picker } from "@react-native-picker/picker";
 
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
@@ -9,9 +12,41 @@ import TotalCard from "../components/TotalCard";
 import { CATEGORIES } from "../constants/categories";
 import { Expense } from "../types/Expense";
 
+const STORAGE_KEY = "expenses";
+
 export default function HomeScreen() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  // Load expenses when app starts
+  useEffect(() => {
+    loadExpenses();
+  }, []);
+
+  // Save expenses whenever they change
+  useEffect(() => {
+    saveExpenses();
+  }, [expenses]);
+
+  const loadExpenses = async () => {
+    try {
+      const savedExpenses = await AsyncStorage.getItem(STORAGE_KEY);
+
+      if (savedExpenses) {
+        setExpenses(JSON.parse(savedExpenses));
+      }
+    } catch (error) {
+      console.error("Error loading expenses:", error);
+    }
+  };
+
+  const saveExpenses = async () => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+    } catch (error) {
+      console.error("Error saving expenses:", error);
+    }
+  };
 
   const handleAddExpense = (expense: Expense) => {
     setExpenses((prev) => [expense, ...prev]);
