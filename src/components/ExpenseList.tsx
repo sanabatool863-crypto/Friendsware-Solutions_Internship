@@ -33,9 +33,12 @@ export default function ExpenseList({
       )}
       style={styles.list}
       contentContainerStyle={styles.listContainer}
-      showsVerticalScrollIndicator={true}
-      persistentScrollbar={true}
       keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+      removeClippedSubviews={true}
+      initialNumToRender={10}
+      maxToRenderPerBatch={10}
+      windowSize={10}
     />
   );
 }
@@ -47,7 +50,6 @@ const styles = StyleSheet.create({
 
   listContainer: {
     paddingBottom: 120,
-    paddingRight: 4,
   },
 
   emptyContainer: {

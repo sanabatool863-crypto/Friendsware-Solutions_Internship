@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 
 import { CATEGORIES } from "../constants/categories";
 import { Expense } from "../types/Expense";
@@ -16,40 +17,44 @@ export default function ExpenseItem({ expense, onDelete }: ExpenseItemProps) {
 
   const badgeColor = categoryInfo ? categoryInfo.color : "#9E9E9E";
 
-  const handleDelete = () => {
-    console.log("Deleting:", expense.id);
-    onDelete(expense.id);
+  const renderRightActions = () => {
+    return (
+      <TouchableOpacity
+        style={styles.swipeDelete}
+        onPress={() => onDelete(expense.id)}
+      >
+        <Text style={styles.swipeDeleteText}>Delete</Text>
+      </TouchableOpacity>
+    );
   };
 
   return (
-    <View style={styles.card}>
-      <View style={styles.topRow}>
-        <Text style={styles.title}>{expense.title}</Text>
+    <Swipeable renderRightActions={renderRightActions}>
+      <View style={styles.card}>
+        <View style={styles.topRow}>
+          <Text style={styles.title}>{expense.title}</Text>
 
-        <Text style={styles.amount}>{formatCurrency(expense.amount)}</Text>
-      </View>
-
-      <View style={styles.bottomRow}>
-        <View
-          style={[
-            styles.badge,
-            {
-              backgroundColor: badgeColor,
-            },
-          ]}
-        >
-          <Text style={styles.badgeText}>{expense.category}</Text>
+          <Text style={styles.amount}>{formatCurrency(expense.amount)}</Text>
         </View>
 
-        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-          <Text style={styles.deleteText}>Delete</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.bottomRow}>
+          <View
+            style={[
+              styles.badge,
+              {
+                backgroundColor: badgeColor,
+              },
+            ]}
+          >
+            <Text style={styles.badgeText}>{expense.category}</Text>
+          </View>
+        </View>
 
-      <Text style={styles.date}>
-        {new Date(expense.createdAt).toLocaleDateString()}
-      </Text>
-    </View>
+        <Text style={styles.date}>
+          {new Date(expense.createdAt).toLocaleDateString()}
+        </Text>
+      </View>
+    </Swipeable>
   );
 }
 
@@ -60,7 +65,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 12,
 
-    // Optional shadow
     shadowColor: "#7C3AED",
     shadowOpacity: 0.08,
     shadowRadius: 8,
@@ -77,12 +81,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     flex: 1,
-    color: "#1E1B4B", // Dark purple text
+    color: "#1E1B4B",
   },
 
   amount: {
     fontSize: 16,
-    color: "#7C3AED", // Primary purple
+    color: "#7C3AED",
     fontWeight: "600",
   },
 
@@ -97,7 +101,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
-    backgroundColor: "#A78BFA", // Secondary purple
   },
 
   badgeText: {
@@ -106,21 +109,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 
-  deleteButton: {
-    backgroundColor: "#EF4444", // Expense red
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-
-  deleteText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },
-
   date: {
     marginTop: 10,
-    color: "#6B7280", // Soft gray
+    color: "#6B7280",
     fontSize: 12,
+  },
+
+  swipeDelete: {
+    backgroundColor: "#EF4444",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 100,
+    marginBottom: 12,
+    borderRadius: 12,
+  },
+
+  swipeDeleteText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
