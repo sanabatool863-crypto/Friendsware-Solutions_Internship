@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   Keyboard,
@@ -13,56 +13,19 @@ import {
   View,
 } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
 import TotalCard from "../components/TotalCard";
 
 import { CATEGORIES } from "../constants/categories";
-import { Expense } from "../types/Expense";
-
-const STORAGE_KEY = "expenses";
+import { useExpenses } from "../context/ExpenseContext";
 
 export default function HomeScreen() {
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const { expenses, addExpense, deleteExpense } = useExpenses();
 
-  useEffect(() => {
-    loadExpenses();
-  }, []);
-
-  useEffect(() => {
-    saveExpenses();
-  }, [expenses]);
-
-  const loadExpenses = async () => {
-    try {
-      const savedExpenses = await AsyncStorage.getItem(STORAGE_KEY);
-
-      if (savedExpenses) {
-        setExpenses(JSON.parse(savedExpenses));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const saveExpenses = async () => {
-    try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleAddExpense = (expense: Expense) => {
-    setExpenses((prev) => [expense, ...prev]);
-  };
-
-  const handleDeleteExpense = (id: string) => {
-    setExpenses((prev) => prev.filter((expense) => expense.id !== id));
-  };
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const totalAmount = useMemo(() => {
     return expenses.reduce((sum, expense) => sum + expense.amount, 0);
@@ -85,12 +48,19 @@ export default function HomeScreen() {
         <SafeAreaView style={styles.container}>
           <Text style={styles.header}>Expense Tracker</Text>
 
+          <TouchableOpacity
+            style={styles.summaryButton}
+            onPress={() => router.push("/summary")}
+          >
+            <Text style={styles.summaryButtonText}>View Summary</Text>
+          </TouchableOpacity>
+
           <TotalCard
             totalAmount={totalAmount}
             totalExpenses={expenses.length}
           />
 
-          <ExpenseForm onAddExpense={handleAddExpense} />
+          <ExpenseForm onAddExpense={addExpense} />
 
           <Text style={styles.filterTitle}>Filter by Category</Text>
 
@@ -141,7 +111,7 @@ export default function HomeScreen() {
           <View style={styles.listWrapper}>
             <ExpenseList
               expenses={filteredExpenses}
-              onDeleteExpense={handleDeleteExpense}
+              onDeleteExpense={deleteExpense}
             />
           </View>
         </SafeAreaView>
@@ -162,8 +132,22 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
     marginTop: 12,
-    marginBottom: 16,
+    marginBottom: 12,
     color: "#7C3AED",
+  },
+
+  summaryButton: {
+    backgroundColor: "#7C3AED",
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 15,
+  },
+
+  summaryButtonText: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 15,
   },
 
   filterTitle: {
