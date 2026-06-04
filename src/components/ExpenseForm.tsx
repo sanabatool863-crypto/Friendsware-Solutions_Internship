@@ -1,6 +1,7 @@
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import {
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -71,6 +72,8 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
 
     onAddExpense(newExpense);
 
+    Keyboard.dismiss();
+
     setTitle("");
     setAmount("");
     setCategory("");
@@ -131,7 +134,7 @@ export default function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFFFFF", // Card color
+    backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 12,
     marginBottom: 20,
@@ -141,16 +144,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 15,
-    color: "#1E1B4B", // Dark purple text
+    color: "#1E1B4B",
   },
 
   input: {
     borderWidth: 1,
-    borderColor: "#A78BFA", // Light purple border
+    borderColor: "#A78BFA",
     borderRadius: 10,
     padding: 12,
     marginBottom: 8,
-    backgroundColor: "#F5F3FF", // Soft purple background
+    backgroundColor: "#F5F3FF",
   },
 
   pickerContainer: {
@@ -162,7 +165,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "#7C3AED", // Primary purple
+    backgroundColor: "#7C3AED",
     padding: 14,
     borderRadius: 10,
     marginTop: 15,
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
   },
 
   error: {
-    color: "#EF4444", // Expense/error red
+    color: "#EF4444",
     marginBottom: 8,
     fontSize: 13,
   },

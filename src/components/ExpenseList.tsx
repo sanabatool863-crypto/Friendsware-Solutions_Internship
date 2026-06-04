@@ -28,18 +28,26 @@ export default function ExpenseList({
     <FlatList
       data={expenses}
       keyExtractor={(item) => item.id}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.listContainer}
       renderItem={({ item }) => (
         <ExpenseItem expense={item} onDelete={onDeleteExpense} />
       )}
+      style={styles.list}
+      contentContainerStyle={styles.listContainer}
+      showsVerticalScrollIndicator={true}
+      persistentScrollbar={true}
+      keyboardShouldPersistTaps="handled"
     />
   );
 }
 
 const styles = StyleSheet.create({
+  list: {
+    flex: 1,
+  },
+
   listContainer: {
-    paddingBottom: 30,
+    paddingBottom: 120,
+    paddingRight: 4,
   },
 
   emptyContainer: {
@@ -49,7 +57,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
 
-    // Optional shadow
     shadowColor: "#7C3AED",
     shadowOpacity: 0.08,
     shadowRadius: 8,
@@ -58,14 +65,14 @@ const styles = StyleSheet.create({
 
   emptyTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "700",
     marginBottom: 10,
-    color: "#1E1B4B", // Dark purple
+    color: "#1E1B4B",
   },
 
   emptyText: {
     textAlign: "center",
-    color: "#6B7280", // Soft gray
+    color: "#6B7280",
     lineHeight: 22,
   },
 });

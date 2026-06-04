@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 
 import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -39,7 +44,7 @@ export default function HomeScreen() {
         setExpenses(JSON.parse(savedExpenses));
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -47,7 +52,7 @@ export default function HomeScreen() {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -72,106 +77,130 @@ export default function HomeScreen() {
   }, [expenses, selectedCategory]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Expense Tracker</Text>
-
-      <TotalCard totalAmount={totalAmount} totalExpenses={expenses.length} />
-
-      <ExpenseForm onAddExpense={handleAddExpense} />
-
-      <Text style={styles.filterTitle}>Filter By Category</Text>
-
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.tabsContainer}
+    <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <TouchableOpacity
-          style={[styles.tab, selectedCategory === "All" && styles.activeTab]}
-          onPress={() => setSelectedCategory("All")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              selectedCategory === "All" && styles.activeTabText,
-            ]}
-          >
-            All
-          </Text>
-        </TouchableOpacity>
+        <SafeAreaView style={styles.container}>
+          <Text style={styles.header}>Expense Tracker</Text>
 
-        {CATEGORIES.map((category) => (
-          <TouchableOpacity
-            key={category.id}
-            style={[
-              styles.tab,
-              selectedCategory === category.name && styles.activeTab,
-            ]}
-            onPress={() => setSelectedCategory(category.name)}
+          <TotalCard
+            totalAmount={totalAmount}
+            totalExpenses={expenses.length}
+          />
+
+          <ExpenseForm onAddExpense={handleAddExpense} />
+
+          <Text style={styles.filterTitle}>Filter by Category</Text>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.filterScroll}
+            contentContainerStyle={styles.tabsContainer}
           >
-            <Text
+            <TouchableOpacity
               style={[
-                styles.tabText,
-                selectedCategory === category.name && styles.activeTabText,
+                styles.tab,
+                selectedCategory === "All" && styles.activeTab,
               ]}
+              onPress={() => setSelectedCategory("All")}
             >
-              {category.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+              <Text
+                style={[
+                  styles.tabText,
+                  selectedCategory === "All" && styles.activeTabText,
+                ]}
+              >
+                All
+              </Text>
+            </TouchableOpacity>
 
-      <ExpenseList
-        expenses={filteredExpenses}
-        onDeleteExpense={handleDeleteExpense}
-      />
-    </SafeAreaView>
+            {CATEGORIES.map((category) => (
+              <TouchableOpacity
+                key={category.id}
+                style={[
+                  styles.tab,
+                  selectedCategory === category.name && styles.activeTab,
+                ]}
+                onPress={() => setSelectedCategory(category.name)}
+              >
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedCategory === category.name && styles.activeTabText,
+                  ]}
+                >
+                  {category.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          <View style={styles.listWrapper}>
+            <ExpenseList
+              expenses={filteredExpenses}
+              onDeleteExpense={handleDeleteExpense}
+            />
+          </View>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#F5F3FF", // Light purple background
+    paddingHorizontal: 16,
+    backgroundColor: "#F5F3FF",
   },
 
   header: {
-    fontSize: 30,
-    fontWeight: "800",
+    fontSize: 26,
+    fontWeight: "700",
     textAlign: "center",
-    marginVertical: 20,
-    color: "#7C3AED", // Main purple
-  },
-
-  filterContainer: {
-    marginBottom: 15,
+    marginTop: 12,
+    marginBottom: 16,
+    color: "#7C3AED",
   },
 
   filterTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "600",
+    color: "#4B5563",
     marginBottom: 8,
+    marginTop: 4,
+  },
+
+  filterScroll: {
+    maxHeight: 45,
+    marginBottom: 10,
   },
 
   tabsContainer: {
-    paddingBottom: 95,
+    alignItems: "center",
+    paddingRight: 10,
   },
 
   tab: {
-    backgroundColor: "#EDE9FE", // Light purple
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 25,
-    marginRight: 10,
+    backgroundColor: "#EDE9FE",
+    paddingHorizontal: 12,
+    height: 34,
+    borderRadius: 17,
+    marginRight: 6,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   activeTab: {
-    backgroundColor: "#7C3AED", // Primary purple
+    backgroundColor: "#7C3AED",
   },
 
   tabText: {
-    color: "#1E1B4B", // Dark purple
+    color: "#1E1B4B",
+    fontSize: 13,
     fontWeight: "600",
   },
 
@@ -179,9 +208,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
 
-  pickerContainer: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    overflow: "hidden",
+  listWrapper: {
+    flex: 1,
   },
 });
